@@ -1,0 +1,28 @@
+name: Mirror SourceHut repos
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '0 * * * *'
+  push:
+    branches:
+      - master
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    env:
+      GH_MIRROR_TOKEN: ${{ secrets.GH_MIRROR_TOKEN }}
+
+    steps:
+      - name: Checkout this repo (workflow + script)
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run mirror script
+        run: |
+          python3 ./mirror.py
