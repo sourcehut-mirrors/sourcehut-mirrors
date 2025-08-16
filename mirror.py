@@ -8,6 +8,7 @@ REPOS = [
   ('blastwave', 'bw', 'bw'),
   ('mlb', 'linkhut', 'linkhut'),
   ('sircmpwn', 'drewdevault.com', 'drewdevault.com'),
+  ('sircmpwn', 'git.sr.ht', 'git.sr.ht'),
   ('sircmpwn', 'hare', 'hare'),
   ('sircmpwn', 'himitsu', 'himitsu'),
   ('sircmpwn', 'hub.sr.ht', 'hub.sr.ht'),
