@@ -10,6 +10,7 @@ REPOS = [
   ('sircmpwn', 'drewdevault.com', 'drewdevault.com'),
   ('sircmpwn', 'hare', 'hare'),
   ('sircmpwn', 'himitsu', 'himitsu'),
+  ('sircmpwn', 'hub.sr.ht', 'hub.sr.ht'),
 ]
 
 def run(cmd: list[str]):
