@@ -10,6 +10,7 @@ REPOS = [
   ('sircmpwn', 'drewdevault.com', 'drewdevault.com'),
   ('sircmpwn', 'git.sr.ht', 'git.sr.ht'),
   ('sircmpwn', 'hare', 'hare'),
+  ('sircmpwn', 'hare-ev', 'hare-ev'),
   ('sircmpwn', 'himitsu', 'himitsu'),
   ('sircmpwn', 'hub.sr.ht', 'hub.sr.ht'),
 ]
