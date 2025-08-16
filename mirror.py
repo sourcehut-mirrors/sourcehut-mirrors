@@ -6,6 +6,7 @@ import sys
 
 REPOS = [
   ('blastwave', 'bw', 'bw'),
+  ('bptato', 'chawan', 'chawan'),
   ('dajolly', 'cgbl', 'cgbl'),
   ('jprotopopov', 'kefir', 'kefir'),
   ('mil', 'sxmo-utils', 'sxmo-utils'),
