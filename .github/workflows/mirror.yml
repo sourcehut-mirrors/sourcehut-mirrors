@@ -26,3 +26,21 @@ jobs:
       - name: Run mirror script
         run: |
           python3 ./mirror.py
+
+      - name: Generate badge JSON
+        run: |
+          ts="$(date -u +'%Y-%m-%d %H:%M UTC')"
+          cat > last-mirror.json <<'EOF'
+          {"schemaVersion":1,"label":"last mirror","message":"","color":"blue"}
+          EOF
+          # inject timestamp
+          jq --arg msg "$ts" '.message=$msg' last-mirror.json > badge.json && mv badge.json last-mirror.json
+     
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: .
+          destination_dir: badge
+          keep_files: true
