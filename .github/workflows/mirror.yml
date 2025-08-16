@@ -18,6 +18,14 @@ jobs:
       - name: Checkout this repo (workflow + script)
         uses: actions/checkout@v4
 
+      - name: Restore repo cache
+        uses: actions/cache@v4
+        with:
+          path: repos
+          key: mirror-${{ runner.os }}-${{ hashFiles('mirror.py') }}-${{ github.run_number }}
+          restore-keys: |
+            mirror-${{ runner.os }}-${{ hashFiles('mirror.py') }}-
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
