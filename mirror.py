@@ -14,6 +14,7 @@ REPOS = [
   ('sircmpwn', 'hare-ev', 'hare-ev'),
   ('sircmpwn', 'himitsu', 'himitsu'),
   ('sircmpwn', 'hub.sr.ht', 'hub.sr.ht'),
+  ('thestr4ng3r', 'chiaki', 'chiaki'),
 ]
 
 def run(cmd: list[str]):
