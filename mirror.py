@@ -5,6 +5,7 @@ import subprocess
 import sys
 
 REPOS = [
+  ('mlb', 'linkhut', 'linkhut'),
   ('sircmpwn', 'drewdevault.com', 'drewdevault.com'),
   ('sircmpwn', 'hare', 'hare'),
   ('sircmpwn', 'himitsu', 'himitsu'),
