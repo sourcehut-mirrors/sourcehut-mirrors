@@ -6,6 +6,7 @@ import sys
 
 REPOS = [
   ('blastwave', 'bw', 'bw'),
+  ('mil', 'sxmo-utils', 'sxmo-utils'),
   ('mlb', 'linkhut', 'linkhut'),
   ('sircmpwn', 'drewdevault.com', 'drewdevault.com'),
   ('sircmpwn', 'git.sr.ht', 'git.sr.ht'),
