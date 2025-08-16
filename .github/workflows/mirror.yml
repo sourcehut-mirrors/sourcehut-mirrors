@@ -22,9 +22,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: repos
-          key: mirror-${{ runner.os }}-${{ hashFiles('mirror.py') }}-${{ github.run_number }}
-          restore-keys: |
-            mirror-${{ runner.os }}-${{ hashFiles('mirror.py') }}-
+          key: mirror-${{ runner.os }}-${{ hashFiles('mirror.py') }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
