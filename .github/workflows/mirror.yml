@@ -1,4 +1,4 @@
-name: Mirror SourceHut Repos
+name: Mirror SourceHut repos
 
 on:
   workflow_dispatch: {}
