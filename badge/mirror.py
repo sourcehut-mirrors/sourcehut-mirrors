@@ -23,6 +23,7 @@ REPOS = [
   ('sircmpwn', 'hub.sr.ht', 'hub.sr.ht'),
   ('technomancy', 'fennel', 'fennel'),
   ('thestr4ng3r', 'chiaki', 'chiaki'),
+  ('xerool', 'fennel-ls', 'fennel-ls'),
 ]
 
 def run(cmd: list[str]):
