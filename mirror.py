@@ -14,6 +14,7 @@ REPOS = [
   ('jprotopopov', 'kefir', 'kefir'),
   ('mil', 'sxmo-utils', 'sxmo-utils'),
   ('mlb', 'linkhut', 'linkhut'),
+  ('sircmpwn', 'betamine', 'betamine'),
   ('sircmpwn', 'bunnix', 'bunnix'),
   ('sircmpwn', 'drewdevault.com', 'drewdevault.com'),
   ('sircmpwn', 'git.sr.ht', 'git.sr.ht'),
