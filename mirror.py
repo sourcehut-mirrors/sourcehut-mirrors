@@ -25,6 +25,7 @@ REPOS = [
   ('sircmpwn', 'man.sr.ht', 'man.sr.ht'),
   ('technomancy', 'fennel', 'fennel'),
   ('thestr4ng3r', 'chiaki', 'chiaki'),
+  ('williewillus', 'thdawn', 'thdawn'),
   ('xerool', 'fennel-ls', 'fennel-ls'),
 ]
 
