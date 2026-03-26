@@ -16,7 +16,6 @@ REPOS = [
   ('mlb', 'linkhut', 'linkhut'),
   ('sircmpwn', 'betamine', 'betamine'),
   ('sircmpwn', 'bunnix', 'bunnix'),
-  ('sircmpwn', 'drewdevault.com', 'drewdevault.com'),
   ('sircmpwn', 'git.sr.ht', 'git.sr.ht'),
   ('sircmpwn', 'hare', 'hare'),
   ('sircmpwn', 'hare-ev', 'hare-ev'),
