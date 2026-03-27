@@ -28,15 +28,19 @@ REPOS = [
   ('xerool', 'fennel-ls', 'fennel-ls'),
 ]
 
-def run(cmd: list[str]):
+def run(cmd: list[str], fatal: bool = True):
   try:
     subprocess.run(cmd, check=True)
+    return True
   except subprocess.CalledProcessError as e:
-    print(f'Command "{cmd}" failed with exit code {e.returncode}')
-    sys.exit(e.returncode)
+    print(f'::warning::Command "{cmd}" failed with exit code {e.returncode}')
+    if fatal:
+      sys.exit(e.returncode)
+    return False
   except FileNotFoundError:
-    print(f'Command "{cmd}" not found')
+    print(f'::warning::Command "{cmd}" not found')
     sys.exit(1)
+    return False
 
 if __name__ == '__main__':
   os.chdir(os.path.dirname(__file__))
@@ -52,11 +56,13 @@ if __name__ == '__main__':
     repo_url = f'https://git.sr.ht/~{repo[0]}/{repo[1]}'
     repo_dir = f'repos/{repo[1]}'
     repo_dst = f'https://x-access-token:{tok}@github.com/sourcehut-mirrors/{repo[2]}.git'
+    ok = False
     if os.path.isdir(repo_dir):
-      run(['git', '-C', repo_dir, 'fetch', '-p', 'origin'])
+      ok = run(['git', '-C', repo_dir, 'fetch', '-p', 'origin'], False)
       print('  updated')
     else:
-      run(['git', 'clone', '--mirror', repo_url, f'repos/{repo[1]}'])
+      ok = run(['git', 'clone', '--mirror', repo_url, f'repos/{repo[1]}'], False)
       print('  cloned')
-    run(['git', '-C', repo_dir, 'push', '--mirror', repo_dst])
+    if ok:
+      run(['git', '-C', repo_dir, 'push', '--mirror', repo_dst])
     print('  pushed')
