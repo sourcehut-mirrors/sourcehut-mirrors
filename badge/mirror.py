@@ -9,7 +9,6 @@ REPOS = [
   ('bptato', 'chawan', 'chawan'),
   ('dajolly', 'cgbl', 'cgbl'),
   ('fijarom', 'fokus', 'fokus'),
-  ('fijarom', 'stutui', 'stutui'),
   ('ioiojo', 'meka', 'meka'),
   ('jprotopopov', 'kefir', 'kefir'),
   ('mil', 'sxmo-utils', 'sxmo-utils'),
