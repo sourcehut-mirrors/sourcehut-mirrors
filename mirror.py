@@ -11,6 +11,7 @@ REPOS = [
   ('fijarom', 'fokus', 'fokus'),
   ('ioiojo', 'meka', 'meka'),
   ('jprotopopov', 'kefir', 'kefir'),
+  ('kovmir', 'arm-assembly-intro', 'arm-assembly-intro'),
   ('mil', 'sxmo-utils', 'sxmo-utils'),
   ('mlb', 'linkhut', 'linkhut'),
   ('sircmpwn', 'betamine', 'betamine'),
