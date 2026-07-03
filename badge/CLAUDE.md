@@ -43,10 +43,20 @@ Per repo, it:
 - Detects a corrupted local cache (bad/missing objects) and self-heals by discarding it and
   re-cloning, versus a plain transient fetch failure, where it leaves the cache alone so the next
   scheduled run can retry from where it left off.
-- Best-effort syncs the local bare repo's `HEAD` to match upstream's default branch before
-  pushing, so a renamed default branch (e.g. `master` -> `main`) carries through. Regular branch
-  renames/deletes need no special handling: `fetch --prune --prune-tags` + `push --mirror` already
-  force-update and delete refs to match upstream exactly.
+- Best-effort syncs the local bare repo's `HEAD`, and GitHub's configured default branch (via the
+  GitHub API, using `GH_MIRROR_TOKEN`), to match upstream's default branch before pushing. This
+  matters beyond cosmetics: GitHub refuses to let `push --mirror` delete whatever branch is
+  currently set as the repo's default, so if upstream renames its default branch (old one deleted,
+  new one created), the push fails on that one ref *every run*, not just transiently, until
+  GitHub's default branch setting is repointed away from the now-deleted branch. The sync runs
+  proactively before the push and again reactively (with one retry) if the push is rejected with
+  "refusing to delete the current branch" — this exact failure mode hit `arm-assembly-intro` in
+  production, where GitHub's default branch was stuck on a deleted `dev` after upstream moved to
+  `master`. Requires `GH_MIRROR_TOKEN` to have permission to edit repo settings (Administration:
+  write for fine-grained PATs, or `repo` scope for classic ones); if it doesn't, the sync
+  no-ops with a warning and the underlying push failure surfaces instead. Regular (non-default)
+  branch renames/deletes need no special handling: `fetch --prune --prune-tags` + `push --mirror`
+  already force-update and delete refs to match upstream exactly.
 - `GIT_TERMINAL_PROMPT=0` ensures a bad URL/credential fails fast instead of hanging on a prompt.
 
 `repos/` (workflow-cache only, restored per matrix leg) holds the bare mirror clone between runs.
@@ -90,9 +100,9 @@ python3 scripts/gen-matrix.py repos.txt          # validate/preview the matrix
 GH_MIRROR_TOKEN=<token> scripts/mirror-one.sh <owner> <repo> [github-repo]
 ```
 
-Both are stdlib/POSIX-only (no dependencies to install). `scripts/mirror-one.sh` requires `git`
-and GNU coreutils' `timeout` on `PATH` — present by default on the `ubuntu-latest` runner this
-workflow targets, but not on macOS, so local runs there need a `timeout` shim (e.g. `brew install
-coreutils` and alias `gtimeout`) or GH Actions itself to test against. Run from the repo root; the
-script creates `repos/<github-repo>` relative to the current directory. There are no tests,
-linter, or build step in this repo.
+Both are stdlib/POSIX-only (no dependencies to install). `scripts/mirror-one.sh` requires `git`,
+`curl`, `jq`, and GNU coreutils' `timeout` on `PATH` — all present by default on the
+`ubuntu-latest` runner this workflow targets, but `timeout` isn't on macOS, so local runs there
+need a shim (e.g. `brew install coreutils` and alias `gtimeout`) or GH Actions itself to test
+against. Run from the repo root; the script creates `repos/<github-repo>` relative to the current
+directory. There are no tests, linter, or build step in this repo.
