@@ -1,16 +1,9 @@
 # Mirrored repos, one per line: <sourcehut-owner> <sourcehut-repo> [github-repo]
-#
-# Fields are separated by any amount of whitespace, so columns may be
-# space-aligned for readability. The github-repo column is optional and
-# defaults to <sourcehut-repo>; set it explicitly when the desired GitHub
-# repo name differs from the SourceHut one. Lines starting with # and blank
-# lines are ignored.
 
 blastwave      bw
 bptato         chawan
 dajolly        cgbl
 fijarom        fokus
-ioiojo         meka
 jprotopopov    kefir
 kovmir         arm-assembly-intro
 mil            sxmo-utils
