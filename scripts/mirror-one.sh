@@ -69,6 +69,9 @@ sync_github_default_branch() {
 
 # run_with_retry <max-attempts> <initial-delay-seconds> -- <command...>
 # Sets LAST_OUTPUT to the combined stdout/stderr of the final attempt.
+# If TERMINAL_CHECK names a function, it's called with the failed attempt's
+# output after every failure; a zero return stops retrying immediately
+# (e.g. no point retrying a 404 three times, it won't change).
 run_with_retry() {
   local max="$1" delay="$2"; shift 2
   local attempt=1 rc
@@ -78,6 +81,9 @@ run_with_retry() {
     if [ "$rc" -eq 0 ]; then
       [ -n "$LAST_OUTPUT" ] && log "$LAST_OUTPUT"
       return 0
+    fi
+    if [ -n "${TERMINAL_CHECK:-}" ] && "$TERMINAL_CHECK" "$LAST_OUTPUT"; then
+      return "$rc"
     fi
     if [ "$attempt" -ge "$max" ]; then
       return "$rc"
@@ -94,11 +100,12 @@ mkdir -p "$(dirname "$CACHE_DIR")"
 
 if [ -d "$CACHE_DIR" ]; then
   log "[$GH_NAME] fetching (cache hit)"
-  if ! run_with_retry "$RETRY_MAX" "$RETRY_DELAY" timeout "$OP_TIMEOUT" \
+  if ! TERMINAL_CHECK=is_missing_upstream run_with_retry "$RETRY_MAX" "$RETRY_DELAY" timeout "$OP_TIMEOUT" \
       git "${GIT_OPTS[@]}" -C "$CACHE_DIR" fetch --prune --prune-tags origin; then
     if is_missing_upstream "$LAST_OUTPUT"; then
-      warn "~${OWNER}/${REPO} not found on SourceHut, skipping this run and keeping the last known mirror"
-      exit 0
+      log "$LAST_OUTPUT" >&2
+      warn "~${OWNER}/${REPO} not found on SourceHut, failing this mirror (existing GitHub mirror left untouched, other mirrors unaffected)"
+      exit 1
     elif is_corrupt_cache "$LAST_OUTPUT"; then
       warn "cached clone looks corrupt, discarding it and re-cloning from scratch"
       rm -rf "$CACHE_DIR"
@@ -112,11 +119,12 @@ fi
 
 if [ ! -d "$CACHE_DIR" ]; then
   log "[$GH_NAME] cloning ~${OWNER}/${REPO} from scratch"
-  if ! run_with_retry "$RETRY_MAX" "$RETRY_DELAY" timeout "$OP_TIMEOUT" \
+  if ! TERMINAL_CHECK=is_missing_upstream run_with_retry "$RETRY_MAX" "$RETRY_DELAY" timeout "$OP_TIMEOUT" \
       git "${GIT_OPTS[@]}" clone --mirror "$SRC_URL" "$CACHE_DIR"; then
     if is_missing_upstream "$LAST_OUTPUT"; then
-      warn "~${OWNER}/${REPO} not found on SourceHut, skipping"
-      exit 0
+      log "$LAST_OUTPUT" >&2
+      warn "~${OWNER}/${REPO} not found on SourceHut, failing this mirror (other mirrors unaffected)"
+      exit 1
     fi
     log "$LAST_OUTPUT" >&2
     warn "clone failed after retries"

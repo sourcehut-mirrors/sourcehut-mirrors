@@ -37,9 +37,12 @@ Per repo, it:
 - Retries clone/fetch/push up to 3 times with backoff (10s, 30s), each attempt bounded by a
   5-minute `timeout` and a stalled-transfer abort (`http.lowSpeedLimit`/`http.lowSpeedTime`), so
   one hung connection can't eat the whole job.
-- Treats an upstream 404 (`repository '...' not found`) as a graceful skip (exit 0, leaves any
-  existing mirror untouched) rather than a failure — expected when an upstream repo is
-  temporarily down or has been deleted.
+- Treats an upstream 404 (`repository '...' not found`) as terminal: fails that one matrix leg
+  (exit 1) without wasting the retry budget on a deterministic outcome that retrying can't change,
+  and leaves any existing GitHub mirror untouched rather than deleting it. `fail-fast: false` on
+  the matrix means this failure is isolated — every other repo still mirrors normally. A repo
+  showing red here means either it's genuinely gone upstream (remove it from `repos.txt`) or it's
+  temporarily unreachable (next run retries from scratch).
 - Detects a corrupted local cache (bad/missing objects) and self-heals by discarding it and
   re-cloning, versus a plain transient fetch failure, where it leaves the cache alone so the next
   scheduled run can retry from where it left off.
