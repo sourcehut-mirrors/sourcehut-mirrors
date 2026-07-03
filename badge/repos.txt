@@ -2,7 +2,6 @@
 
 blastwave      bw
 bptato         chawan
-dajolly        cgbl
 fijarom        fokus
 jprotopopov    kefir
 kovmir         arm-assembly-intro
