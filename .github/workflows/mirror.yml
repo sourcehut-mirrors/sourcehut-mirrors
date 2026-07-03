@@ -8,40 +8,75 @@ on:
     branches:
       - master
 
+# Never let two mirror runs race each other over the same caches/pushes;
+# queue instead of cancelling so an in-flight push always finishes.
+concurrency:
+  group: mirror
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
 jobs:
-  mirror:
+  plan:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: plan
+        run: python3 scripts/gen-matrix.py repos.txt
+
+  mirror:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix: ${{ fromJson(needs.plan.outputs.matrix) }}
     env:
       GH_MIRROR_TOKEN: ${{ secrets.GH_MIRROR_TOKEN }}
-
     steps:
-      - name: Checkout this repo (workflow + script)
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts
 
+      # Per-repo cache, not one blob for all repos: an unrelated repo's
+      # first clone or a script change no longer invalidates every mirror.
       - name: Restore repo cache
         uses: actions/cache@v4
         with:
-          path: repos
-          key: mirror-${{ runner.os }}-${{ hashFiles('mirror.py') }}
+          path: repos/${{ matrix.github_repo }}
+          key: mirror-v2-${{ matrix.github_repo }}-${{ github.run_id }}
+          restore-keys: |
+            mirror-v2-${{ matrix.github_repo }}-
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
+      - name: Mirror ~${{ matrix.owner }}/${{ matrix.repo }}
+        run: scripts/mirror-one.sh "${{ matrix.owner }}" "${{ matrix.repo }}" "${{ matrix.github_repo }}"
 
-      - name: Run mirror script
-        run: |
-          python3 ./mirror.py
+  badge:
+    needs: mirror
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Generate badge JSON
         run: |
           ts="$(date -u +'%Y-%m-%d %H:%M UTC')"
-          cat > last-mirror.json <<'EOF'
-          {"schemaVersion":1,"label":"last mirror","message":"","color":"blue"}
-          EOF
-          # inject timestamp
-          jq --arg msg "$ts" '.message=$msg' last-mirror.json > badge.json && mv badge.json last-mirror.json
-     
+          if [ "${{ needs.mirror.result }}" = "success" ]; then
+            color=brightgreen
+          else
+            color=red
+          fi
+          jq -n --arg msg "$ts" --arg color "$color" \
+            '{schemaVersion: 1, label: "last mirror", message: $msg, color: $color}' \
+            > last-mirror.json
+
       - name: Publish to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
