@@ -17,5 +17,6 @@ sircmpwn       hub.sr.ht
 sircmpwn       man.sr.ht
 technomancy    fennel
 thestr4ng3r    chiaki
+toastal        github-less-social
 williewillus   thdawn
 xerool         fennel-ls
