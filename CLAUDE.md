@@ -35,6 +35,21 @@ Removing an entry stops future syncs but does not delete the already-created Git
 history shows that removals (e.g. `Remove ~fijarom/stutui`) are handled as separate manual repo
 deletions on GitHub. New mirror requests come in as GitHub issues on this repo.
 
+## Pushing to origin
+
+This repo can only be pushed to GitHub using the SSH key at `~/.ssh/sourcehut-mirrors` — the
+default SSH key does not have write access. Either point this repo's git config at it:
+
+```
+git config core.sshCommand "ssh -i ~/.ssh/sourcehut-mirrors -o IdentitiesOnly=yes"
+```
+
+or set it per-command via `GIT_SSH_COMMAND`:
+
+```
+GIT_SSH_COMMAND="ssh -i ~/.ssh/sourcehut-mirrors -o IdentitiesOnly=yes" git push
+```
+
 ## Running locally
 
 ```
