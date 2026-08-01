@@ -9,6 +9,7 @@ mil            sxmo-utils
 mlb            linkhut
 sircmpwn       betamine
 sircmpwn       bunnix
+sircmpwn       drewdevault.com
 sircmpwn       git.sr.ht
 sircmpwn       hare
 sircmpwn       hare-ev
