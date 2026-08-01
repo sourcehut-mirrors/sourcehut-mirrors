@@ -1,15 +1,42 @@
-# Run the staggered mirror as a single long-lived container.
+# Run the staggered mirror behind a Gluetun VPN, one long-lived container.
+# All of the mirror's traffic (git.sr.ht, github.com) egresses through the VPN;
+# gluetun's built-in kill-switch means it can't leak if the tunnel drops.
 #
-#   cp .env.example .env      # then edit in the real GH_MIRROR_TOKEN
+#   cp .env.example .env      # then fill in GH_MIRROR_TOKEN + WIREGUARD_PRIVATE_KEY
 #   docker compose up -d --build
-#   docker compose logs -f
+#   docker compose logs -f mirror
 #
 services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    # Distinct name so it can't collide with the other gluetun on this host.
+    container_name: sourcehut-mirrors-gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+      # Only the private key is secret -> pulled from the git-ignored .env.
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
+      - WIREGUARD_ADDRESSES=10.2.0.2/32
+      - SERVER_COUNTRIES=United States
+      - TZ=America/Chicago
+    restart: unless-stopped
+
   mirror:
     build: .
     image: sourcehut-mirrors
+    container_name: sourcehut-mirrors
+    # Share gluetun's network namespace: the mirror has no network of its own,
+    # so every connection goes through the VPN (or fails closed).
+    network_mode: "service:gluetun"
+    depends_on:
+      gluetun:
+        condition: service_healthy   # wait for the tunnel before the first tick
     restart: unless-stopped
-    # GH_MIRROR_TOKEN (required) and an optional MIRROR_INTERVAL live here.
+    # GH_MIRROR_TOKEN (required) and optional MIRROR_INTERVAL live here.
     env_file: .env
     volumes:
       # Rotation pointer, polled repos.txt, and bare-clone cache; survives

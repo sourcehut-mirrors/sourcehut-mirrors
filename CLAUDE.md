@@ -102,13 +102,13 @@ skip) if the destination is missing. New mirror requests come in as GitHub issue
 Docker (via `compose.yaml`) is the intended way to run it:
 
 ```
-cp .env.example .env      # then edit in the real GH_MIRROR_TOKEN
+cp .env.example .env      # then fill in GH_MIRROR_TOKEN + WIREGUARD_PRIVATE_KEY
 docker compose up -d --build
-docker compose logs -f
+docker compose logs -f mirror
 ```
 
-- **`.env`** holds `GH_MIRROR_TOKEN` (required) and an optional `MIRROR_INTERVAL`; it's
-  git-ignored. `.env.example` documents the token scopes.
+- **`.env`** holds `GH_MIRROR_TOKEN` and `WIREGUARD_PRIVATE_KEY` (both required) and an optional
+  `MIRROR_INTERVAL`; it's git-ignored. `.env.example` documents them. See "VPN" below.
 - **`MIRROR_INTERVAL`** is the sleep between ticks (any GNU `sleep` duration: `18m`, `3m`, `1h`).
   Each repo refreshes about every `MIRROR_INTERVAL * N` (N = lines in `repos.txt`), so set it to
   `target-refresh / N` — default `18m` gives ~6h per repo at N=20; `3m` gives hourly. **Retune it
@@ -129,6 +129,17 @@ docker compose logs -f
 Image internals: Alpine + `bash git curl jq coreutils python3 tini ca-certificates`, running as a
 non-root `mirror` user. `MIRROR_STATE_FILE`, `MIRROR_LOCK_FILE`, and `MIRROR_CACHE_DIR` are set to
 `/data/...` in the `Dockerfile` so all writable state stays on the volume.
+
+**VPN:** `compose.yaml` runs the mirror behind a **gluetun** sidecar (ProtonVPN / WireGuard). The
+`mirror` service uses `network_mode: "service:gluetun"`, so all its traffic egresses through the
+tunnel and fails closed (gluetun's kill-switch) if the VPN drops; it waits for gluetun to report
+healthy before the first tick. Only `WIREGUARD_PRIVATE_KEY` is secret — it lives in the git-ignored
+`.env` and compose interpolates it into gluetun's env; the rest of the VPN config is non-secret and
+sits in `compose.yaml`. Use a **dedicated** WireGuard key here — sharing one key across two gluetun
+instances makes the tunnels fight over the peer and knock each other offline; if you rotate the
+key, update `WIREGUARD_ADDRESSES` to the address ProtonVPN pairs with it. The gluetun
+`container_name` is `sourcehut-mirrors-gluetun` so it can't collide with another gluetun on the
+host.
 
 ## Status badge and uptime
 
