@@ -8,14 +8,15 @@ This is the `sourcehut-mirrors` GitHub organization's control repo. It mirrors a
 SourceHut (`git.sr.ht`) repositories to GitHub, one GitHub repo per mirrored project, with
 documented permission from both the upstream project owners and SourceHut. It is not sponsored,
 endorsed, or affiliated with SourceHut. There is no application code — the repo is config
-(`repos.txt`), three small scripts under `scripts/`, and a `Dockerfile` + `compose.yaml` that run
+(`repos.txt`), four small scripts under `scripts/`, and a `Dockerfile` + `compose.yaml` that run
 them as a container.
 
 The mirror runs as a **Docker container**: a long-lived loop that mirrors one repo, sleeps, and
 repeats, walking `repos.txt` one repo at a time so `git.sr.ht` is never hit by a parallel burst of
 clones. There is intentionally no CI: an earlier GitHub Actions workflow that fanned the mirror out
-as a parallel matrix (and updated a "last mirror" badge via `gh-pages`) was removed in favor of
-this. If you reintroduce automation, keep it one-clone-at-a-time.
+as a parallel matrix was removed in favor of this. If you reintroduce automation, keep it
+one-clone-at-a-time. The "last mirror" badge lives on (see "Status badge and uptime"), but it's now
+written by the mirror loop itself, one commit per tick, rather than by CI.
 
 ## Architecture
 
@@ -128,6 +129,29 @@ docker compose logs -f
 Image internals: Alpine + `bash git curl jq coreutils python3 tini ca-certificates`, running as a
 non-root `mirror` user. `MIRROR_STATE_FILE`, `MIRROR_LOCK_FILE`, and `MIRROR_CACHE_DIR` are set to
 `/data/...` in the `Dockerfile` so all writable state stays on the volume.
+
+## Status badge and uptime
+
+After each tick, `mirror-next.sh` calls `scripts/update-badge.sh` (best-effort; a failure never
+affects mirroring) to publish a single JSON file to the **`gh-pages`** branch of the control repo
+via the GitHub Contents API — **one commit per tick**. The file is a Shields.io `endpoint` badge
+(`schemaVersion`/`label`/`message`/`color`) plus a `last` object of basic stats; `README.md`
+renders it from the raw `gh-pages` URL (no GitHub Pages needed). Green on a successful tick, orange
+if that repo's mirror failed. The badge update runs on both success and failure, so every tick
+leaves a heartbeat commit.
+
+The one-commit-per-tick cadence is deliberate: `gh-pages` is one of the two branches GitHub counts
+toward the account's contribution graph (the other is the default branch), so the graph doubles as
+a bot-uptime gauge. For that to work the commit author email (`BADGE_AUTHOR_EMAIL`, default
+`sourcehut-mirrors@pm.me`) must be **verified on the GitHub account**. `gh-pages` was bootstrapped
+as an orphan branch holding just `badge/`; expect its history to grow ~one commit per tick
+(don't squash it — that would erase the contribution squares).
+
+Configured via `BADGE_*` env (defaults in the `Dockerfile`): `BADGE_BRANCH` (empty disables the
+whole thing — local/dev runs never publish), `BADGE_REPO`, `BADGE_PATH`, `BADGE_AUTHOR_NAME`,
+`BADGE_AUTHOR_EMAIL`. `GH_MIRROR_TOKEN` needs Contents:write on `BADGE_REPO` (the control repo), not
+just the mirror repos — a fine-grained token must include it in its repo selection. Set
+`BADGE_DRY_RUN=1` to print the intended commit + payload instead of sending it.
 
 ## Pushing to origin
 

@@ -78,3 +78,14 @@ if [ "${MIRROR_DRY_RUN:-}" = "1" ]; then
 fi
 
 scripts/mirror-one.sh "$owner" "$repo" "$gh"
+rc=$?
+
+# Best-effort status badge / uptime commit; never affects the mirror's outcome.
+# No-op unless BADGE_BRANCH is set (so local runs don't publish). Runs on both
+# success and failure so every tick leaves a heartbeat commit.
+if [ -n "${BADGE_BRANCH:-}" ]; then
+  scripts/update-badge.sh "$owner" "$repo" "$gh" "$rc" "$((idx + 1))" "$n" \
+    || log "badge update failed (ignored)"
+fi
+
+exit "$rc"

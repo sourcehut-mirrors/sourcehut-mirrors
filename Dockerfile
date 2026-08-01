@@ -34,6 +34,15 @@ ENV MIRROR_STATE_FILE=/data/.mirror-state \
     REPOS_URL=https://raw.githubusercontent.com/sourcehut-mirrors/sourcehut-mirrors/master/repos.txt \
     HOME=/tmp
 
+# Per-tick status badge + uptime commit on gh-pages (set BADGE_BRANCH= to
+# disable). Author email must be verified on the GitHub account for the commits
+# to count as contributions.
+ENV BADGE_BRANCH=gh-pages \
+    BADGE_REPO=sourcehut-mirrors/sourcehut-mirrors \
+    BADGE_PATH=badge/last-mirror.json \
+    BADGE_AUTHOR_NAME=sourcehut-mirrors \
+    BADGE_AUTHOR_EMAIL=sourcehut-mirrors@pm.me
+
 RUN chmod +x /usr/local/bin/mirror-loop scripts/*.sh scripts/*.py \
  && addgroup -S mirror \
  && adduser -S -G mirror mirror \
