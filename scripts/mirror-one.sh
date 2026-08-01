@@ -20,7 +20,10 @@ export GIT_TERMINAL_PROMPT=0
 
 SRC_URL="https://git.sr.ht/~${OWNER}/${REPO}"
 DST_URL="https://x-access-token:${GH_MIRROR_TOKEN}@github.com/sourcehut-mirrors/${GH_NAME}.git"
-CACHE_DIR="repos/${GH_NAME}"
+# Where the bare mirror clone is cached between runs. Defaults to repos/ next
+# to the cwd; override MIRROR_CACHE_DIR to point it at a persistent volume
+# (the container sets it to /data/repos).
+CACHE_DIR="${MIRROR_CACHE_DIR:-repos}/${GH_NAME}"
 GITHUB_API="https://api.github.com/repos/sourcehut-mirrors/${GH_NAME}"
 
 RETRY_MAX=3

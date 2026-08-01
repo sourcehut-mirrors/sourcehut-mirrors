@@ -1,0 +1,10 @@
+# Bare mirror clones cached between runs (created by mirror-one.sh)
+/repos/
+
+# Server rotation state (created by mirror-next.sh)
+/.mirror-state
+/.mirror.lock
+
+# Local secrets for the systemd/cron deployment; commit only the .example
+*.env
+!*.env.example

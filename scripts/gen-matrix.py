@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
-"""Parse repos.txt into the JSON matrix consumed by the mirror workflow.
+"""Parse and validate repos.txt, emitting the entries as JSON on stdout.
+
+Consumed by mirror-next.sh, which rotates through the entries. Output shape:
+{"repos": [{"owner": ..., "repo": ..., "github_repo": ...}, ...]}.
 
 Each non-comment, non-blank line is: <sourcehut-owner> <sourcehut-repo>
 [github-repo], whitespace-separated (any amount, so columns can be
 space-aligned). github-repo defaults to sourcehut-repo when omitted.
+Exits non-zero with a line-numbered ::error:: on a malformed config.
 """
 import json
-import os
 import re
 import sys
 
@@ -58,15 +61,8 @@ def main():
         print(f'::error::no mirror entries found in {path}', file=sys.stderr)
         sys.exit(1)
 
-    out = json.dumps({'include': entries})
-
-    gh_out = os.environ.get('GITHUB_OUTPUT')
-    if gh_out:
-        with open(gh_out, 'a', encoding='utf-8') as f:
-            f.write(f'matrix={out}\n')
-
-    print(out)
-    print(f'planned {len(entries)} mirror(s)', file=sys.stderr)
+    print(json.dumps({'repos': entries}))
+    print(f'parsed {len(entries)} mirror(s)', file=sys.stderr)
 
 
 if __name__ == '__main__':

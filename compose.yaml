@@ -1,0 +1,23 @@
+# Run the staggered mirror as a single long-lived container.
+#
+#   cp .env.example .env      # then edit in the real GH_MIRROR_TOKEN
+#   docker compose up -d --build
+#   docker compose logs -f
+#
+services:
+  mirror:
+    build: .
+    image: sourcehut-mirrors
+    restart: unless-stopped
+    # GH_MIRROR_TOKEN (required) and an optional MIRROR_INTERVAL live here.
+    env_file: .env
+    volumes:
+      # Rotation pointer + bare-clone cache; survives restarts and rebuilds.
+      - mirror-data:/data
+      # Edit repos.txt on the host and it takes effect next tick, no rebuild.
+      - ./repos.txt:/app/repos.txt:ro
+    # Small init so signals/zombies are handled even without tini in the image.
+    init: true
+
+volumes:
+  mirror-data:

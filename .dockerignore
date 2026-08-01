@@ -1,0 +1,10 @@
+.git
+.gitignore
+repos/
+.mirror-state
+.mirror.lock
+*.env
+!*.env.example
+README.md
+CLAUDE.md
+LICENSE
