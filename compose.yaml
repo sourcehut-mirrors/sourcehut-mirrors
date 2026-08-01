@@ -12,10 +12,12 @@ services:
     # GH_MIRROR_TOKEN (required) and an optional MIRROR_INTERVAL live here.
     env_file: .env
     volumes:
-      # Rotation pointer + bare-clone cache; survives restarts and rebuilds.
+      # Rotation pointer, polled repos.txt, and bare-clone cache; survives
+      # restarts and rebuilds.
       - mirror-data:/data
-      # Edit repos.txt on the host and it takes effect next tick, no rebuild.
-      - ./repos.txt:/app/repos.txt:ro
+    # repos.txt is polled from GitHub each tick (REPOS_URL, set in the
+    # Dockerfile) — push to master and the server picks it up. To pin to the
+    # image's baked-in list instead, override with `REPOS_URL=` in .env.
     # Small init so signals/zombies are handled even without tini in the image.
     init: true
 

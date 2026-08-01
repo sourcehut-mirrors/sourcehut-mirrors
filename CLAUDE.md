@@ -87,8 +87,10 @@ starts a comment; blank lines are ignored.
 
 ## Adding, removing, or renaming a mirror
 
-Edit `repos.txt` directly — this is the only place mirror configuration lives. Removing a line
-stops future syncs but does not delete the already-created GitHub repo; past removals (e.g.
+Edit `repos.txt` directly and push to `master` — this is the only place mirror configuration
+lives, and the running container polls it from GitHub (see "Deployment"), so a push is all it takes
+to reconfigure the server. Removing a line stops future syncs but does not delete the
+already-created GitHub repo; past removals (e.g.
 `Remove ~fijarom/stutui`) have been handled as separate manual repo deletions on GitHub. Adding a
 line requires the destination `sourcehut-mirrors/<github-repo>` GitHub repo to already exist and
 be empty — `git push --mirror` doesn't create repos, and `mirror-one.sh` will fail loudly (not
@@ -110,10 +112,15 @@ docker compose logs -f
   Each repo refreshes about every `MIRROR_INTERVAL * N` (N = lines in `repos.txt`), so set it to
   `target-refresh / N` — default `18m` gives ~6h per repo at N=20; `3m` gives hourly. **Retune it
   when `repos.txt` grows or shrinks.**
-- The `mirror-data` named volume (`/data`) holds the rotation pointer and the bare-clone cache, so
-  restarts and rebuilds resume where they left off. `repos.txt` is bind-mounted read-only, so
-  editing the list takes effect on the next tick without a rebuild (the scripts are baked in, so
-  changing *them* needs `--build`).
+- The `mirror-data` named volume (`/data`) holds the rotation pointer, the polled `repos.txt`, and
+  the bare-clone cache, so restarts and rebuilds resume where they left off.
+- **`repos.txt` is polled from GitHub each tick** (`REPOS_URL`, default this repo's raw `master`),
+  so pushing a change to `master` updates the running server on the next tick — no rebuild, no
+  redeploy, nothing to touch on the box. The fetched file is validated with `gen-matrix.py` before
+  it replaces the working copy, so a malformed commit is rejected (logged, last good copy kept)
+  instead of halting the mirror; a network blip likewise keeps the last copy. Set `REPOS_URL=` (empty)
+  in `.env` to pin to the image's baked-in list instead. The scripts themselves are baked in, so
+  changing *them* still needs a `--build`.
 - The image runs one repo at a time in a loop, so it never overlaps itself. To drive it from an
   external scheduler instead (host cron, k8s CronJob), run the image with `-e MIRROR_ONCE=1` to do
   a single tick and exit.

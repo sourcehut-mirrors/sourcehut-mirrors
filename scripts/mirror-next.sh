@@ -33,6 +33,9 @@ cd "$(dirname "$0")/.." || exit 1
 
 STATE_FILE="${MIRROR_STATE_FILE:-.mirror-state}"
 LOCK_FILE="${MIRROR_LOCK_FILE:-.mirror.lock}"
+# The config to mirror from. Defaults to the checked-in repos.txt; the
+# container points this at a copy it polls from GitHub (see docker/entrypoint.sh).
+REPOS_FILE="${REPOS_FILE:-repos.txt}"
 
 log() { printf '[%s] %s\n' "$(date -u +%FT%TZ)" "$*"; }
 
@@ -47,12 +50,12 @@ if command -v flock >/dev/null 2>&1; then
   fi
 fi
 
-# Reuse gen-matrix.py's validated parser; a malformed repos.txt aborts the
+# Reuse gen-matrix.py's validated parser; a malformed repos file aborts the
 # tick (exit 1, errors on stderr) instead of guessing a repo.
-parsed="$(python3 scripts/gen-matrix.py repos.txt)" || exit 1
+parsed="$(python3 scripts/gen-matrix.py "$REPOS_FILE")" || exit 1
 n="$(jq '.repos | length' <<<"$parsed")"
 if ! [ "$n" -gt 0 ] 2>/dev/null; then
-  log "no mirror entries found in repos.txt"
+  log "no mirror entries found in $REPOS_FILE"
   exit 1
 fi
 
