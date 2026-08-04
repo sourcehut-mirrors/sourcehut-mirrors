@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "bw · 2026-08-04 08:40 UTC",
+  "message": "chawan · 2026-08-04 08:45 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-04 08:40 UTC",
-    "source": "~blastwave/bw",
-    "github_repo": "bw",
+    "at": "2026-08-04 08:45 UTC",
+    "source": "~bptato/chawan",
+    "github_repo": "chawan",
     "ok": true,
-    "position": 1,
+    "position": 2,
     "total": 21
   }
 }
