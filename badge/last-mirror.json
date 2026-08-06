@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "hub.sr.ht · 2026-08-06 22:37 UTC",
+  "message": "man.sr.ht · 2026-08-06 22:42 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-06 22:37 UTC",
-    "source": "~sircmpwn/hub.sr.ht",
-    "github_repo": "hub.sr.ht",
+    "at": "2026-08-06 22:42 UTC",
+    "source": "~sircmpwn/man.sr.ht",
+    "github_repo": "man.sr.ht",
     "ok": true,
-    "position": 15,
+    "position": 16,
     "total": 21
   }
 }
