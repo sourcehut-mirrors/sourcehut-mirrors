@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "man.sr.ht · 2026-08-14 23:52 UTC",
+  "message": "fennel · 2026-08-14 23:58 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-14 23:52 UTC",
-    "source": "~sircmpwn/man.sr.ht",
-    "github_repo": "man.sr.ht",
+    "at": "2026-08-14 23:58 UTC",
+    "source": "~technomancy/fennel",
+    "github_repo": "fennel",
     "ok": true,
-    "position": 16,
+    "position": 17,
     "total": 21
   }
 }
