@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "betamine · 2026-08-15 12:10 UTC",
+  "message": "bunnix · 2026-08-15 12:16 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-15 12:10 UTC",
-    "source": "~sircmpwn/betamine",
-    "github_repo": "betamine",
+    "at": "2026-08-15 12:16 UTC",
+    "source": "~sircmpwn/bunnix",
+    "github_repo": "bunnix",
     "ok": true,
-    "position": 8,
+    "position": 9,
     "total": 21
   }
 }
