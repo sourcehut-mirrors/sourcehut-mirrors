@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "linkhut · 2026-08-15 23:20 UTC",
+  "message": "betamine · 2026-08-15 23:25 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-15 23:20 UTC",
-    "source": "~mlb/linkhut",
-    "github_repo": "linkhut",
+    "at": "2026-08-15 23:25 UTC",
+    "source": "~sircmpwn/betamine",
+    "github_repo": "betamine",
     "ok": true,
-    "position": 7,
+    "position": 8,
     "total": 21
   }
 }
