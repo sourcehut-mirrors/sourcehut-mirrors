@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "hare · 2026-08-16 07:26 UTC",
+  "message": "hare-ev · 2026-08-16 07:32 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-16 07:26 UTC",
-    "source": "~sircmpwn/hare",
-    "github_repo": "hare",
+    "at": "2026-08-16 07:32 UTC",
+    "source": "~sircmpwn/hare-ev",
+    "github_repo": "hare-ev",
     "ok": true,
-    "position": 12,
+    "position": 13,
     "total": 21
   }
 }
