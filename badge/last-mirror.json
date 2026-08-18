@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "sxmo-utils · 2026-08-18 14:02 UTC",
+  "message": "linkhut · 2026-08-18 14:07 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-18 14:02 UTC",
-    "source": "~mil/sxmo-utils",
-    "github_repo": "sxmo-utils",
+    "at": "2026-08-18 14:07 UTC",
+    "source": "~mlb/linkhut",
+    "github_repo": "linkhut",
     "ok": true,
-    "position": 6,
+    "position": 7,
     "total": 21
   }
 }
