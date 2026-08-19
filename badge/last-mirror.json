@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "fokus · 2026-08-19 17:43 UTC",
+  "message": "kefir · 2026-08-19 17:48 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-19 17:43 UTC",
-    "source": "~fijarom/fokus",
-    "github_repo": "fokus",
+    "at": "2026-08-19 17:48 UTC",
+    "source": "~jprotopopov/kefir",
+    "github_repo": "kefir",
     "ok": true,
-    "position": 3,
+    "position": 4,
     "total": 21
   }
 }
