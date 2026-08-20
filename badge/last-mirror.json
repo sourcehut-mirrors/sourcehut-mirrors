@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "thdawn · 2026-08-20 02:35 UTC",
+  "message": "fennel-ls · 2026-08-20 02:41 UTC",
   "color": "green",
   "last": {
-    "at": "2026-08-20 02:35 UTC",
-    "source": "~williewillus/thdawn",
-    "github_repo": "thdawn",
+    "at": "2026-08-20 02:41 UTC",
+    "source": "~xerool/fennel-ls",
+    "github_repo": "fennel-ls",
     "ok": true,
-    "position": 20,
+    "position": 21,
     "total": 21
   }
 }
