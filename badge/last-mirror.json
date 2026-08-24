@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "chawan · 2026-08-24 01:02 UTC",
-  "color": "orange",
+  "message": "fokus · 2026-08-24 01:07 UTC",
+  "color": "green",
   "last": {
-    "at": "2026-08-24 01:02 UTC",
-    "source": "~bptato/chawan",
-    "github_repo": "chawan",
-    "ok": false,
-    "position": 2,
+    "at": "2026-08-24 01:07 UTC",
+    "source": "~fijarom/fokus",
+    "github_repo": "fokus",
+    "ok": true,
+    "position": 3,
     "total": 21
   }
 }
