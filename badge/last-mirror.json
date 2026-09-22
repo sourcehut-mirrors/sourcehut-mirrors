@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "hare-ev · 2026-09-22 16:28 UTC",
-  "color": "green",
+  "message": "himitsu · 2026-09-22 16:37 UTC",
+  "color": "orange",
   "last": {
-    "at": "2026-09-22 16:28 UTC",
-    "source": "~sircmpwn/hare-ev",
-    "github_repo": "hare-ev",
-    "ok": true,
-    "position": 13,
+    "at": "2026-09-22 16:37 UTC",
+    "source": "~sircmpwn/himitsu",
+    "github_repo": "himitsu",
+    "ok": false,
+    "position": 14,
     "total": 21
   }
 }
