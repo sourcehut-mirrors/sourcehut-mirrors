@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "label": "last mirror",
-  "message": "linkhut · 2026-11-22 22:27 UTC",
+  "message": "bunnix · 2026-11-22 22:37 UTC",
   "color": "green",
   "last": {
-    "at": "2026-11-22 22:27 UTC",
-    "source": "~mlb/linkhut",
-    "github_repo": "linkhut",
+    "at": "2026-11-22 22:37 UTC",
+    "source": "~sircmpwn/bunnix",
+    "github_repo": "bunnix",
     "ok": true,
-    "position": 7,
+    "position": 9,
     "total": 21
   }
 }
